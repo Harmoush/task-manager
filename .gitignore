@@ -1,0 +1,21 @@
+# .NET build output (ALL levels)
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+
+# Node / Angular
+**/node_modules/
+**/dist/
+
+# Environment files
+.env
+**/appsettings.Development.json
+
+# Docker
+**/docker-compose.override.yml
+
+# OS
+**/.DS_Store
+Thumbs.db

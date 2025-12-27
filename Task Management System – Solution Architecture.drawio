@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.9">
+  <diagram name="Solution Architecture" id="VG3vb0UVGp2haPwDZcRJ">
+    <mxGraphModel dx="1426" dy="795" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Angular 20 SPA&#xa;&#xa;- Standalone Components&#xa;- Signals&#xa;- Tailwind CSS&#xa;- Angular CDK&#xa;&#xa;Core: Auth, Guards, Interceptors&#xa;Features: Tasks, Projects" vertex="1">
+          <mxGeometry height="220" width="360" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value=".NET 10 Web API&#xa;&#xa;- JWT Auth&#xa;- Controllers&#xa;- Swagger&#xa;- Serilog&#xa;- Global Exception Handling" vertex="1">
+          <mxGeometry height="200" width="360" x="460" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Application Layer&#xa;(CQRS)&#xa;&#xa;- MediatR&#xa;- Commands / Queries&#xa;- FluentValidation" vertex="1">
+          <mxGeometry height="160" width="360" x="460" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Domain Layer&#xa;&#xa;- Entities (Task, Project)&#xa;- Enums&#xa;- Business Rules&#xa;- No dependencies" vertex="1">
+          <mxGeometry height="160" width="360" x="460" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Infrastructure Layer&#xa;&#xa;- EF Core 10&#xa;- ASP.NET Identity&#xa;- Repositories" vertex="1">
+          <mxGeometry height="160" width="360" x="880" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" value="SQL Server 2022&#xa;(Docker Container)" vertex="1">
+          <mxGeometry height="120" width="360" x="880" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-7" edge="1" parent="1" source="ATrjz42gAbFTOrnQeB9c-1" style="endArrow=block;" target="ATrjz42gAbFTOrnQeB9c-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-8" edge="1" parent="1" source="ATrjz42gAbFTOrnQeB9c-2" style="endArrow=block;" target="ATrjz42gAbFTOrnQeB9c-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-9" edge="1" parent="1" source="ATrjz42gAbFTOrnQeB9c-3" style="endArrow=block;" target="ATrjz42gAbFTOrnQeB9c-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-10" edge="1" parent="1" source="ATrjz42gAbFTOrnQeB9c-3" style="endArrow=block;" target="ATrjz42gAbFTOrnQeB9c-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-11" edge="1" parent="1" source="ATrjz42gAbFTOrnQeB9c-5" style="endArrow=block;" target="ATrjz42gAbFTOrnQeB9c-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-12" parent="1" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Docker.svg;" value="" vertex="1">
+          <mxGeometry height="41" width="50" x="340" y="119.5" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-13" parent="1" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Docker.svg;" value="" vertex="1">
+          <mxGeometry height="41" width="50" x="1180" y="519.5" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-14" parent="1" style="points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;fillColor=#FF6A00;strokeColor=none;shape=mxgraph.alibaba_cloud.apigateway;" value="" vertex="1">
+          <mxGeometry height="41.699999999999996" width="43.199999999999996" x="470" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ATrjz42gAbFTOrnQeB9c-15" parent="1" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;spacingTop=3;image=img/lib/active_directory/database.svg;" value="" vertex="1">
+          <mxGeometry height="37" width="50" x="890" y="522" as="geometry" />
+        </mxCell>
+        <mxCell id="PNhnKEatIHFi5Hg2CeC7-1" parent="1" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Docker.svg;" value="" vertex="1">
+          <mxGeometry height="41" width="50" x="760" y="120.69999999999999" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
