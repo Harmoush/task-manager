@@ -1,49 +1,88 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using System.Text;
+using TaskManager.Infrastructure.Identity;
 using TaskManager.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ---------------------
+// Database + Identity
+// ---------------------
+builder.Services.AddDbContext<TaskManagerDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services
+    .AddIdentityCore<ApplicationUser>()
+    .AddRoles<IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<TaskManagerDbContext>();
+
+// ---------------------
+// JWT Authentication
+// ---------------------
+var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+    });
+
+// ---------------------
+// Controllers
+// ---------------------
 builder.Services.AddControllers();
+
+// ---------------------
+// Swagger / OpenAPI 10.x JWT Setup
+// ---------------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new() { Title = "TaskManager.Api", Version = "v1" });
-});
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Task Manager API", Version = "v1" });
 
-builder.Services.AddHealthChecks();
+    // **Define the Bearer JWT scheme**
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization Header using Bearer scheme",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
 
-builder.Host.UseSerilog((context, services, configuration) => configuration
-    .ReadFrom.Configuration(context.Configuration)
-    .ReadFrom.Services(services)
-    .Enrich.FromLogContext()
-);
-
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-builder.Services.AddDbContext<TaskManagerDbContext>(options =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseSqlServer(connectionString);
+    // **Use the delegate overload required in Swashbuckle 10.x**
+    c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        // Use the scheme ID (same as AddSecurityDefinition name)
+        [new OpenApiSecuritySchemeReference("Bearer", document)] = new List<string>()
+    });
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskManager.Api v1");
-    });
-}
+// ---------------------
+// Middleware
+// ---------------------
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Task Manager API v1"));
 
-app.UseSerilogRequestLogging();
-app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
-app.MapHealthChecks("/health");
 
 app.Run();

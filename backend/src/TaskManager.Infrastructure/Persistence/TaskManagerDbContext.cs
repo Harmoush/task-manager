@@ -1,10 +1,12 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Domain.Entities;
+using TaskManager.Infrastructure.Identity;
 
 namespace TaskManager.Infrastructure.Persistence;
 
-public class TaskManagerDbContext : IdentityDbContext
+public class TaskManagerDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options)
         : base(options)

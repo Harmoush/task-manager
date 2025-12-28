@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TaskManager.Api.Controllers;
 
@@ -17,6 +18,7 @@ public class TasksController : ControllerBase
         _db = db;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAsync() =>
         Ok(await _db.Tasks.ToListAsync());
