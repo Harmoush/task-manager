@@ -13,11 +13,20 @@ public class TaskItem : BaseEntity
 
     public TaskItem() { }
 
-    public TaskItem(string title, string? description)
+    public TaskItem(string title, string? description, DateTime? dueDate = null)
     {
         Title = title;
         Description = description;
+        DueDate = dueDate;
         Status = TaskStatus.New;
+    }
+
+    public void Update(string? title, string? description, DateTime? dueDate)
+    {
+        Title = string.IsNullOrWhiteSpace(title) ? Title : title;
+        Description = description ?? Description;
+        DueDate = dueDate ?? DueDate;
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public void MoveTo(TaskStatus newStatus)
