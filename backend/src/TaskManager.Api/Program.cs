@@ -1,9 +1,13 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
+using TaskManager.Api.Middleware;
+using TaskManager.Api.Validation;
 using TaskManager.Infrastructure.Identity;
 using TaskManager.Infrastructure.Persistence;
 
@@ -72,6 +76,14 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// ---------------------
+// Fluent Validation
+// ---------------------
+builder.Services.AddFluentValidationAutoValidation();
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateTaskValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateTaskValidator>();
+
 var app = builder.Build();
 
 // ---------------------
@@ -79,6 +91,8 @@ var app = builder.Build();
 // ---------------------
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Task Manager API v1"));
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
