@@ -11,7 +11,8 @@ namespace TaskManager.Api.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("api/tasks")]
+[Route("api/[controller]")]
+[ApiVersion("1.0")]
 public class TasksController : ControllerBase
 {
     private readonly ILogger<TasksController> _logger;

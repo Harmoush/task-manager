@@ -2,10 +2,14 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
+using TaskManager.Api.Extensions;
 using TaskManager.Api.Middleware;
 using TaskManager.Api.Validation;
 using TaskManager.Infrastructure.Identity;
@@ -20,6 +24,31 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables();
+
+// ---------------------
+// API Versioning
+// ---------------------
+builder.Services.AddApiVersioning(options =>
+{
+    // Default version if client does not specify
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+
+    // Report supported/deprecated versions in response headers
+    options.ReportApiVersions = true;
+
+    // HEADER versioning
+    options.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+
+});
+
+// Required to generate versioned Swagger docs
+builder.Services.AddVersionedApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV"; // e.g., v1
+    options.SubstituteApiVersionInUrl = false; // We are using header versioning
+});
+
 
 // ---------------------
 // Database + Identity
@@ -78,28 +107,8 @@ builder.Services.AddControllers();
 // Swagger / OpenAPI 10.x JWT Setup
 // ---------------------
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Task Manager API", Version = "v1" });
-
-    // **Define the Bearer JWT scheme**
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization Header using Bearer scheme",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT"
-    });
-
-    // **Use the delegate overload required in Swashbuckle 10.x**
-    c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-    {
-        // Use the scheme ID (same as AddSecurityDefinition name)
-        [new OpenApiSecuritySchemeReference("Bearer", document)] = new List<string>()
-    });
-});
+builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
 // ---------------------
 // Fluent Validation

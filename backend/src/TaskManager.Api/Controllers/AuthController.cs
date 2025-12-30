@@ -10,7 +10,8 @@ using TaskManager.Infrastructure.Identity;
 namespace TaskManager.Api.Controllers;
 
 [ApiController]
-[Route("api/auth")]
+[Route("api/[controller]")]
+[ApiVersion("1.0")]
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
