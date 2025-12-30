@@ -10,5 +10,6 @@ public record TaskResponse(
     Guid? AssignedUserId,
     DateTime? DueDate,
     DateTime CreatedAt,
-    DateTime? UpdatedAt
+    DateTime? UpdatedAt,
+    Guid? CreatedByUserId
 );

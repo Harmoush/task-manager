@@ -14,10 +14,35 @@ using TaskManager.Infrastructure.Persistence;
 var builder = WebApplication.CreateBuilder(args);
 
 // ---------------------
+// Configuration    
+// ---------------------
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
+
+// ---------------------
 // Database + Identity
 // ---------------------
-builder.Services.AddDbContext<TaskManagerDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+if (builder.Environment.IsEnvironment("Testing"))
+{
+    // Use SQLite in-memory for integration tests
+    builder.Services.AddDbContext<TaskManagerDbContext>(options =>
+    {
+        options.UseSqlite(
+            "DataSource=:memory:",
+            sqlite => sqlite.MigrationsAssembly("TaskManager.Infrastructure"));
+    });
+}
+else
+{
+    builder.Services.AddDbContext<TaskManagerDbContext>(options =>
+    {
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("DefaultConnection"),
+            sql => sql.MigrationsAssembly("TaskManager.Infrastructure"));
+    });
+}
 
 builder.Services
     .AddIdentityCore<ApplicationUser>()
@@ -100,3 +125,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+// Make the implicit Program class public for integration tests
+public partial class Program { }
