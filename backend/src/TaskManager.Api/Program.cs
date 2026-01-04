@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
+using System.Text.Json.Serialization;
 using TaskManager.Api.Extensions;
 using TaskManager.Api.Middleware;
 using TaskManager.Api.Validation;
@@ -101,7 +102,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // ---------------------
 // Controllers
 // ---------------------
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+});
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(
+        new JsonStringEnumConverter()
+    );
+});
 
 // ---------------------
 // Swagger / OpenAPI 10.x JWT Setup
@@ -132,6 +143,20 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Only for local development
+// To-Do Remove later
+app.UseCors(x =>
+    x.AllowAnyOrigin()
+     .AllowAnyHeader()
+     .AllowAnyMethod());
+
+app.Use(async (ctx, next) =>
+{
+    Console.WriteLine($"Incoming: {ctx.Request.Method} {ctx.Request.Path}");
+    await next();
+});
+
 
 app.Run();
 // Make the implicit Program class public for integration tests

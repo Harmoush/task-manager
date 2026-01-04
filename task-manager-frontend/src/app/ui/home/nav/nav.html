@@ -6,8 +6,14 @@
       </div>
       <div class="flex space-x-8">
         <a href="#" class="text-gray-700 hover:text-blue-600 transition">Home</a>
+        @if(!isAuthenticated()){
+        <a routerLink="/login" class="text-gray-700 hover:text-blue-600 transition">Login</a>
+        }@else{
         <a routerLink="/tasks" class="text-gray-700 hover:text-blue-600 transition">Tasks</a>
-        <a href="#" class="text-gray-700 hover:text-blue-600 transition">Login</a>
+        <a href="" (click)="logout()" class="text-gray-700 hover:text-blue-600 transition"
+          >Logout</a
+        >
+        }
       </div>
     </div>
   </div>

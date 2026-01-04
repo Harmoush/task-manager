@@ -3,7 +3,8 @@
 **/obj/
 
 # Visual Studio
-.vs/
+**/.vs/
+**/.vscode/
 
 # Node / Angular
 **/node_modules/

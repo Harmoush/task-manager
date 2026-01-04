@@ -24,12 +24,21 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAsync(RegisterRequest request)
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest request)
     {
+        var existingUser = await _userManager.FindByEmailAsync(request.Email);
+        if (existingUser != null)
+        {
+            return BadRequest("Email already registered.");
+        }
+
         var user = new ApplicationUser
         {
             UserName = request.Email,
-            Email = request.Email
+            Email = request.Email,
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            PhoneNumber = request.PhoneNumber
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
@@ -39,7 +48,7 @@ public class AuthController : ControllerBase
             return BadRequest(result.Errors);
         }
 
-        return Ok();
+        return Ok(new { Message = "User registered successfully." });
     }
 
     [HttpPost("login")]
