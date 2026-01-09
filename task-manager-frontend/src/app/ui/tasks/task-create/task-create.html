@@ -1,0 +1,31 @@
+<form
+  class="max-w-md mx-auto bg-white p-6 rounded-lg shadow space-y-4"
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+>
+  <h2 class="text-xl font-semibold">Create Task</h2>
+
+  <div>
+    <input class="w-full border rounded px-3 py-2" placeholder="Title" formControlName="title" />
+
+    @if (form.controls.title.touched && form.controls.title.invalid) {
+    <p class="text-red-500 text-sm">Title is required</p>
+    }
+  </div>
+
+  <textarea
+    class="w-full border rounded px-3 py-2"
+    placeholder="Description"
+    formControlName="description"
+  ></textarea>
+
+  <input type="date" class="w-full border rounded px-3 py-2" formControlName="dueDate" />
+
+  <button
+    type="submit"
+    class="w-full bg-blue-600 text-white py-2 rounded disabled:opacity-50"
+    [disabled]="loading()"
+  >
+    @if (loading()) { Creating... } @else { Create Task }
+  </button>
+</form>

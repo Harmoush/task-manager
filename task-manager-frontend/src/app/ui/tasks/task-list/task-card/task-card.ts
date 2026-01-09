@@ -1,6 +1,5 @@
 import { DatePipe } from '@angular/common';
 import { Component, input, output } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { TaskItem } from '../../../../domain/models/task-item.model';
 import { TaskStatus } from '../../../../domain/enums/task-status.enum';
 import { SlicePipe } from '@angular/common';
@@ -13,13 +12,13 @@ import { SlicePipe } from '@angular/common';
 export class TaskCard {
   task = input.required<TaskItem>();
   deleted = output<string>();
-  edit = output<string>();
+  edited = output<string>();
 
   deleteTask(id: string) {
     this.deleted.emit(id);
   }
   editTask(id: string) {
-    this.edit.emit(id);
+    this.edited.emit(id);
   }
   get statusLabel() {
     switch (this.task().status) {

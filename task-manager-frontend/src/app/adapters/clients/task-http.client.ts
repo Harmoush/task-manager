@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { TaskClient } from '../../application/tasks/task-client';
 import { environment } from '../../../environments/environment';
 import { PaginatedTasks } from '../../domain/dtos/paginated-tasks';
+import { UpdateTaskRequest } from '../../domain/dtos/update-task-request';
 @Injectable({ providedIn: 'root' })
 export class TaskHttpClient implements TaskClient {
   private apiUrl = `${environment.apiUrl}/tasks`;
@@ -19,8 +20,8 @@ export class TaskHttpClient implements TaskClient {
     return this.http.post<TaskItem>(this.apiUrl, task);
   }
 
-  update(task: TaskItem): Observable<TaskItem> {
-    return this.http.put<TaskItem>(`${this.apiUrl}/${task.id}`, task);
+  update(id: string, request: UpdateTaskRequest): Observable<TaskItem> {
+    return this.http.put<TaskItem>(`${this.apiUrl}/${id}`, request);
   }
 
   delete(id: string): Observable<void> {

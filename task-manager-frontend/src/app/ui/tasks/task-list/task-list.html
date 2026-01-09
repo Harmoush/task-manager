@@ -1,5 +1,15 @@
-@for(task of tasks() ;track $index){
+@if (loading()) {
+<p class="text-gray-500">Loading tasks...</p>
+} @if (!loading() && tasks().length === 0) {
+<p class="text-gray-400">No tasks found</p>
+} @for(task of tasks() ;track $index){
 <div class="pb-5">
-  <app-task-card [task]="task" (deleted)="onDelete($event)"> </app-task-card>
+  <app-task-card [task]="task" (deleted)="onDelete($event)" (edited)="onEdited($event)">
+  </app-task-card>
 </div>
 }
+<div class="flex justify-between items-center mb-4">
+  <a routerLink="/tasks/new" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+    + New Task
+  </a>
+</div>

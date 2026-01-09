@@ -1,38 +1,38 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { TaskItem } from '../../../domain/models/task-item.model';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { TaskService } from '../../../application/tasks/task.service';
 import { TaskCard } from './task-card/task-card';
-import { tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Router, RouterLink } from '@angular/router';
+import {
+  selectTasks,
+  selectTasksLoading,
+} from '../../../application/store/selectors/task.selectors';
+import { TaskActions } from '../../../application/store/actions/task.actions';
 
 @Component({
+  standalone: true,
   selector: 'app-task-list',
   templateUrl: './task-list.html',
-  imports: [TaskCard],
+  imports: [TaskCard, RouterLink],
 })
 export class TaskList implements OnInit {
-  tasks = signal<TaskItem[]>([]);
+  private store = inject(Store);
+  private router = inject(Router);
+
+  tasks = this.store.selectSignal(selectTasks);
+  loading = this.store.selectSignal(selectTasksLoading);
 
   constructor(private taskService: TaskService) {}
 
   ngOnInit() {
-    this.loadTasks();
-  }
-
-  loadTasks() {
-    this.taskService.getAll().subscribe({
-      next: (response) => {
-        console.log('Full response:', response); // log everything
-        console.log('Tasks items:', response.items); // log the array
-        this.tasks.set(response.items ?? []); // set only the array
-      },
-      error: (err) => {
-        console.error('Error loading tasks:', err);
-        this.tasks.set([]);
-      },
-    });
+    this.store.dispatch(TaskActions.load({}));
   }
 
   onDelete(id: string) {
-    this.tasks.update((tasks) => tasks.filter((task) => task.id !== id));
+    this.store.dispatch(TaskActions.delete({ id }));
+  }
+
+  onEdited(id: string) {
+    this.router.navigate(['/tasks/edit', id]);
   }
 }

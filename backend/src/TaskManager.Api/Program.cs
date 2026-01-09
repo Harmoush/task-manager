@@ -139,11 +139,6 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Task Manage
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
-
 // Only for local development
 // To-Do Remove later
 app.UseCors(x =>
@@ -157,6 +152,10 @@ app.Use(async (ctx, next) =>
     await next();
 });
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
 // Make the implicit Program class public for integration tests

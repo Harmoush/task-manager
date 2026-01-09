@@ -40,4 +40,8 @@ export class AuthService {
   register(data: RegisterRequest) {
     return this.authClient.register(data);
   }
+
+  getToken() {
+    return this.authState.token();
+  }
 }

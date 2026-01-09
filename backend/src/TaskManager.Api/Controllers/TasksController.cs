@@ -128,7 +128,7 @@ public class TasksController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult<TaskResponse>> UpdateAsync(Guid id, UpdateTaskRequest request)
+    public async Task<ActionResult<TaskResponse>> UpdateAsync(Guid id, [FromBody] UpdateTaskRequest request)
     {
         var task = await _db.Tasks.FindAsync(id);
         if (task == null)
