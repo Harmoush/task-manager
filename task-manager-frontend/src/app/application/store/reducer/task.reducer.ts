@@ -11,10 +11,11 @@ export const taskReducer = createReducer(
     error: null,
   })),
 
-  on(TaskActions.loadSuccess, (state, { tasks }) => ({
+  on(TaskActions.loadSuccess, (state, { tasks, totalCount }) => ({
     ...state,
     loading: false,
     items: tasks,
+    totalCount: totalCount,
   })),
 
   on(TaskActions.loadFailure, (state, { error }) => ({

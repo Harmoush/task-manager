@@ -12,15 +12,21 @@ export class TaskHttpClient implements TaskClient {
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<PaginatedTasks> {
-    return this.http.get<PaginatedTasks>(this.apiUrl);
+  getAll(params: {
+    page: number;
+    pageSize: number;
+    search?: string;
+    sortBy?: string;
+    ascending?: boolean;
+  }): Observable<PaginatedTasks> {
+    return this.http.get<PaginatedTasks>(this.apiUrl, { params: params });
   }
 
   create(task: Partial<TaskItem>): Observable<TaskItem> {
     return this.http.post<TaskItem>(this.apiUrl, task);
   }
 
-  update(id: string, request: UpdateTaskRequest): Observable<TaskItem> {
+  update(id: string, request: Partial<UpdateTaskRequest>): Observable<TaskItem> {
     return this.http.put<TaskItem>(`${this.apiUrl}/${id}`, request);
   }
 

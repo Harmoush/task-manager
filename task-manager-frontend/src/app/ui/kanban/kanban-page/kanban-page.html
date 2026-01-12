@@ -1,0 +1,21 @@
+<div class="p-6">
+  <h1 class="text-2xl font-semibold mb-6">Kanban Board</h1>
+  <div class="flex justify-between items-center mb-4">
+    <a routerLink="/tasks/new" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+      + New Task
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    @for (column of tasksByStatus(); track column.status) {
+    <app-kanban-column
+      [title]="column.title"
+      [tasks]="column.tasks"
+      [status]="column.status"
+      (deleted)="onDelete($event)"
+      (edited)="onEdited($event)"
+      (statusChanged)="onStatusChanged($event)"
+    />
+    }
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, input, output } from '@angular/core';
-import { TaskItem } from '../../../../domain/models/task-item.model';
-import { TaskStatus } from '../../../../domain/enums/task-status.enum';
+import { TaskItem } from '../../../domain/models/task-item.model';
+import { TaskStatus } from '../../../domain/enums/task-status.enum';
 import { SlicePipe } from '@angular/common';
 
 @Component({

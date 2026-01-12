@@ -18,7 +18,7 @@ export class TaskEdit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  TaskStatus = TaskStatus;
+  taskStatus = TaskStatus;
 
   readonly taskId = this.route.snapshot.paramMap.get('id')!;
   readonly task = this.store.selectSignal(selectTaskById(this.taskId));

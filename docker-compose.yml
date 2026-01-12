@@ -3,7 +3,8 @@ version: "3.9"
 services:
   api:
     build:
-      context: ./backend/src/TaskManager.Api
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: taskmanager-api
     ports:
       - "8080:8080"
@@ -29,6 +30,15 @@ services:
       - "1433:1433"
     volumes:
       - sql_data:/var/opt/mssql
+
+  frontend:
+    image: task-frontend
+    build:
+      context: ./task-manager-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
 
 volumes:
   sql_data:

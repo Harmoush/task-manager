@@ -5,9 +5,15 @@ import { PaginatedTasks } from '../../domain/dtos/paginated-tasks';
 import { UpdateTaskRequest } from '../../domain/dtos/update-task-request';
 
 export interface TaskClient {
-  getAll(): Observable<PaginatedTasks>;
+  getAll(params: {
+    page: number;
+    pageSize: number;
+    search?: string;
+    sortBy?: string;
+    ascending?: boolean;
+  }): Observable<PaginatedTasks>;
   create(task: Partial<TaskItem>): Observable<TaskItem>;
-  update(id: string, request: UpdateTaskRequest): Observable<TaskItem>;
+  update(id: string, request: Partial<UpdateTaskRequest>): Observable<TaskItem>;
   delete(id: string): Observable<void>;
 }
 

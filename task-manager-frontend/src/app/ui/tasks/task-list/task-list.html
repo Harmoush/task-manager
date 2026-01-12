@@ -1,15 +1,60 @@
-@if (loading()) {
-<p class="text-gray-500">Loading tasks...</p>
-} @if (!loading() && tasks().length === 0) {
-<p class="text-gray-400">No tasks found</p>
-} @for(task of tasks() ;track $index){
 <div class="pb-5">
-  <app-task-card [task]="task" (deleted)="onDelete($event)" (edited)="onEdited($event)">
-  </app-task-card>
-</div>
-}
-<div class="flex justify-between items-center mb-4">
-  <a routerLink="/tasks/new" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-    + New Task
-  </a>
+  <div class="flex justify-between mb-2 items-center">
+    <input
+      type="text"
+      placeholder="Search tasks..."
+      (input)="onFilterChange($event.target.value)"
+      class="border rounded px-3 py-1 w-1/3"
+    />
+
+    <a routerLink="/tasks/new" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+      + New Task
+    </a>
+  </div>
+
+  <table
+    mat-table
+    [dataSource]="tasks()"
+    matSort
+    (matSortChange)="onSortChange($event)"
+    class="mat-elevation-z8 w-full"
+  >
+    <!-- Columns -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+      <td mat-cell *matCellDef="let task">{{ task.title }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td mat-cell *matCellDef="let task">{{ task.description }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <td mat-cell *matCellDef="let task">{{ task.status }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let task">
+        <button mat-button color="primary" (click)="onEdited(task.id)">Edit</button>
+        <button mat-button color="warn" (click)="onDelete(task.id)">Delete</button>
+      </td>
+    </ng-container>
+
+    <!-- Header & Row -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    [length]="totalCount()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="[5, 10, 20]"
+    (page)="onPageChange($event)"
+  >
+  </mat-paginator>
+
+  <p *ngIf="tasks().length === 0" class="text-gray-400 mt-2">No tasks found</p>
 </div>

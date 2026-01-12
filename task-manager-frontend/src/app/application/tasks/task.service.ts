@@ -7,22 +7,28 @@ import { UpdateTaskRequest } from '../../domain/dtos/update-task-request';
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {
-  constructor(@Inject(TASK_CLIENT) private taskRepo: TaskClient) {}
+  constructor(@Inject(TASK_CLIENT) private taskClient: TaskClient) {}
 
-  getAll(): Observable<PaginatedTasks> {
-    return this.taskRepo.getAll();
+  getAll(
+    page = 1,
+    pageSize = 10,
+    search = '',
+    sortBy = '',
+    ascending = true
+  ): Observable<PaginatedTasks> {
+    return this.taskClient.getAll({ page, pageSize, search, sortBy, ascending });
   }
 
   create(task: Partial<TaskItem>): Observable<TaskItem> {
     // Place for business validation before passing to adapter
-    return this.taskRepo.create(task);
+    return this.taskClient.create(task);
   }
 
-  update(id: string, request: UpdateTaskRequest): Observable<TaskItem> {
-    return this.taskRepo.update(id, request);
+  update(id: string, request: Partial<UpdateTaskRequest>): Observable<TaskItem> {
+    return this.taskClient.update(id, request);
   }
 
   delete(id: string): Observable<void> {
-    return this.taskRepo.delete(id);
+    return this.taskClient.delete(id);
   }
 }
